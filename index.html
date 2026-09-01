@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -68,8 +68,6 @@
     const BUILD_KIND = "NETWORK VERSION";
     const BUILD_VERSION = "2.1.53";
     const BUILD_TIMESTAMP = "2026-05-14 23:18:00 KST";
-    const METERED_TURN_API_URL = "https://button.metered.live/api/v1/turn/credentials?apiKey=4a133f37a5ae9d2d73d33a3e7672ce4ee6ac";
-    let meteredIceServersPromise = null;
 
     const assetList = {
       player: "gfx/player.png",
@@ -7438,22 +7436,7 @@
     }
 
     async function coopLoadIceServers() {
-      if (!meteredIceServersPromise) {
-        meteredIceServersPromise = fetch(METERED_TURN_API_URL, { cache: "no-store" })
-          .then((response) => {
-            if (!response.ok) throw new Error("TURN API " + response.status);
-            return response.json();
-          })
-          .then((servers) => {
-            if (!Array.isArray(servers) || !servers.length) throw new Error("TURN API returned no ICE servers");
-            return servers;
-          })
-          .catch((err) => {
-            console.warn("Metered TURN fetch failed, using fallback ICE servers", err);
-            return fallbackIceServers();
-          });
-      }
-      return meteredIceServersPromise;
+      return fallbackIceServers();
     }
 
     async function coopCreatePeer(reset = true, holder = coop) {
