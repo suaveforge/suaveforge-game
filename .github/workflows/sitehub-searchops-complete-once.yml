@@ -1,0 +1,24 @@
+name: SiteHub SearchOps complete p39 once
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/sitehub-searchops-complete-once.yml']
+permissions: {contents: write}
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply complete SiteHub contract
+        env:
+          PROJECT_ID: p39
+          PUBLIC_URL: https://game.suaveforge.com/
+          PROJECT_NAME: SANG SUB · SuaveForge GAME
+          DESCRIPTION: SANG SUB은 브라우저에서 전투, 협동 연결, 무기와 맵 기능을 직접 체험하는 SuaveForge 액션 게임 데모입니다.
+        run: |
+          set -Eeuo pipefail
+          curl -fsSL https://raw.githubusercontent.com/suaveforge/sitehub-deploy/8289fa3e45143954bda73514ad6fd3667d90891d/searchops/static-complete-adapter.py -o /tmp/sitehub.py
+          python /tmp/sitehub.py
+          git config user.name 'SuaveForge SiteHub'; git config user.email '53187583+programmer119@users.noreply.github.com'
+          git add index.html sitemap.xml robots.txt
+          if ! git diff --cached --quiet; then git commit -m 'Apply SiteHub SearchOps p39'; git push; fi
